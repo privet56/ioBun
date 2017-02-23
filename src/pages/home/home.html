@@ -1,0 +1,46 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title class="header">
+      <table><tr>
+        <td><img src="assets/bunny_hopps2.gif" /></td>
+        <td> &nbsp; Bunnnies @ Ionic</td>
+      </tr>
+      </table>
+    </ion-title>
+  </ion-navbar>
+</ion-header>
+
+
+<ion-content padding class="cnt">
+    <ion-list>
+      <ion-item>
+        <ion-label fixed>Seethearts:</ion-label>
+        <ion-select (ionChange)="changeCategory()" [(ngModel)]="category" name="category">
+            <ion-option value="bun">buns</ion-option>
+            <ion-option value="bunny">bunnies</ion-option>
+            <ion-option value="rabbit">Rabbits</ion-option>
+            <ion-option value="pet">Pets</ion-option>
+            <ion-option value="cat">Cats</ion-option>
+            <ion-option value="dog">Dogs</ion-option>
+            <!--ion-option value="hase">Hasen (German)</ion-option>
+            <ion-option value="kaninchen">Kaninchen (German)</ion-option -->
+        </ion-select>
+      </ion-item>
+    </ion-list>
+    <ion-list>
+      <ion-item *ngIf="items">
+        There are {{ items.length }} News found for {{category}}
+      </ion-item>
+      <ion-item *ngFor="let item of items">
+        <ion-thumbnail *ngIf="item.data.thumbnail" item-left>
+          <img src="{{item.data.thumbnail}}">
+        </ion-thumbnail>
+        <h2>{{item.data.title}}</h2>
+        <p>
+          <ion-icon name="thumbs-up">{{item.data.score}}</ion-icon>&nbsp;&nbsp;
+          <ion-icon name="chatboxes">{{item.data.num_comments}}</ion-icon>
+        </p>
+        <button ion-button clear item-right (click)="viewItem(item.data)">View</button>
+      </ion-item>
+    </ion-list>
+</ion-content>
