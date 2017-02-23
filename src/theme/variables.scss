@@ -4,6 +4,23 @@ $font-path: "../assets/fonts";
 
 @import "ionic.globals";
 
+.ion-ios-bunicon,
+.ion-md-bunicon {
+  content: url(../assets/bunny.png);
+  width: 24px;
+  height: 32px;
+  padding: 6px 4px 2px;
+  opacity: 0.9;
+}
+.ion-ios-buncontacticon,
+.ion-md-buncontacticon {
+  content: url(../assets/bunny_hopps2.gif);
+  width: 24px;
+  height: 32px;
+  padding: 6px 4px 2px;
+  opacity: 0.9;
+}
+
 .cnt
 {
   background-image:url(../assets/b.jpg);background-repeat:no-repeat;

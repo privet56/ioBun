@@ -6,4 +6,4 @@ set USERPROFILE=%~dp0../devenv/MsVSCode
 
 start "" %~dp0../devenv/MsVSCode/Code.exe %~dp0
 rem start "" cmd /c "timeout 9 & start http://localhost:8100/"
-rem ionic lab
+ionic lab

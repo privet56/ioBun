@@ -19,7 +19,7 @@ export class HomePage
   }
   ngOnInit()
   {
-    this.getPosts(this.category, this.limit);
+    //this.getPosts(this.category, this.limit);
   }
 
   getDefaults()
