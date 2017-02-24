@@ -17,12 +17,6 @@ export class WelcomePage
 
   constructor(public navCtrl: NavController, private redditService:RedditService)
   {
-    this.categories.set("autumn", 3);
-    this.categories.set("home" , 12);
-    this.categories.set("spring", 4);
-    this.categories.set("summer" , 4);
-    this.categories.set("winter" , 7);
-
     this.getDefaults();
   }
   ngOnInit()
@@ -45,6 +39,15 @@ export class WelcomePage
     } else {
       this.limit = 10;
     }
+  }
+
+  ionViewDidLoad()                          //see lifecycle events on https://ionicframework.com/docs/v2/api/navigation/NavController/
+  {                                         //do it here otherwise timeout on old android devices!
+    this.categories.set("autumn", 3);
+    this.categories.set("home" , 12);
+    this.categories.set("spring", 4);
+    this.categories.set("summer" , 4);
+    this.categories.set("winter" , 7);
   }
 
   getPosts(category, limit)
@@ -79,6 +82,8 @@ export class WelcomePage
 
     if(!this.category)
     {
+      //TODO: check if it is working on device
+      //return picNames;
       return this.getPicsOfAllCats();
     }
     let picCount = this.categories.get(this.category);

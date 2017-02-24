@@ -8,3 +8,6 @@
 	$ npm outdated							//check if succeeded
 	$ check if fixes necessary				//eg. below fix for pTooltip
 	$ git commit & 'git push origin master'
+
+## android build needs JDK & Android SDK:
+	-> use startbuildandroid.bat
