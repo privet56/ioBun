@@ -1,4 +1,4 @@
-# Mobile Ionic & Angular 2+ App with and for Bunnies
+# Mobile Ionic 2 App with and for Bunnies
 ## language: TypeScript, JavaScript
 
 GUI :

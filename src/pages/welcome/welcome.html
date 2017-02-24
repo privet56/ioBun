@@ -17,15 +17,19 @@
         <ion-label fixed>Seethearts:</ion-label>
         <ion-select (ionChange)="changeCategory()" [(ngModel)]="category" name="category">
           <ion-option value="">[choose one]</ion-option>
-            <ion-option value="bun">buns</ion-option>
-            <ion-option value="bunny">bunnies</ion-option>
-            <ion-option value="rabbit">Rabbits</ion-option>
-            <ion-option value="pet">Pets</ion-option>
-            <ion-option value="cat">Cats</ion-option>
-            <ion-option value="dog">Dogs</ion-option>
-            <!--ion-option value="hase">Hasen (German)</ion-option>
-            <ion-option value="kaninchen">Kaninchen (German)</ion-option -->
+            <!-- TODO: build options based on categories -->
+            <ion-option value="autumn">Autumn</ion-option>
+            <ion-option value="home">Home</ion-option>
+            <ion-option value="spring">Spring</ion-option>
+            <ion-option value="summer">Summer</ion-option>
+            <ion-option value="winter">Winter</ion-option>
         </ion-select>
+      </ion-item>
+    </ion-list>
+
+    <ion-list>
+      <ion-item *ngFor="let picName of getPicsOfSelectedCat()" class="ngfor" #ionItem>
+        <img src="assets/bunpics/{{picName}}.png" (click)="onBunClick($event, ionItem)" />
       </ion-item>
     </ion-list>
     <ion-list>

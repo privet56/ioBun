@@ -10,8 +10,8 @@ import {DetailsPage} from '../details/details';
 export class HomePage
 {
   items: any = null;
-  category: any;
-  limit:any; 
+  category: any = null;
+  limit:any = 10;
 
   constructor(public navCtrl: NavController, private redditService:RedditService)
   {
@@ -19,7 +19,7 @@ export class HomePage
   }
   ngOnInit()
   {
-    //this.getPosts(this.category, this.limit);
+    this.getPosts(this.category, this.limit);
   }
 
   getDefaults()
@@ -28,7 +28,7 @@ export class HomePage
     {
       this.category = localStorage.getItem('category');
     } else {
-      this.category = 'bunny';
+      this.category = '';
     }
 
     if(localStorage.getItem('limit') != null)
@@ -41,6 +41,10 @@ export class HomePage
 
   getPosts(category, limit)
   {
+    if(!category)
+    {
+      return;
+    }
     //TODO: handle nothing found case
     //TODO: handle error case
     this.redditService.getPosts(category, limit).subscribe(response =>

@@ -21,11 +21,65 @@ $font-path: "../assets/fonts";
   opacity: 0.9;
 }
 
-.cnt
+@keyframes ngforani
+{
+  0%
+  {
+    padding-left: 100px;
+    border-radius: 25px;
+    transform: rotate3d(1, 2, -1, 192deg);
+  }
+  100%
+  {
+    padding-left: 0px;
+    border-radius: 5px;
+    transform: rotate3d(1,0,0,0deg);
+  } 
+}
+.ngfor
+{
+  animation: ngforani 3s;
+}
+
+@keyframes ngselani
+{
+  0%
+  {
+    border-radius: 5px;
+    transform: rotate(0deg);
+    transform: scale(1.0);
+  }
+  50%
+  {
+    transform: rotate(36deg);
+  }
+  100%
+  {
+    border-radius: 55px;
+    transform: rotate(0deg);
+    transform: scale(1.5);
+  }
+}
+.ngsel
+{
+  animation-duration: 3s; /* or: Xms */
+  animation-iteration-count: 2;
+  animation-direction: alternate; /* or: normal */
+  animation-timing-function: ease-out; /* or: ease, ease-in, ease-in-out, linear, cubic-bezier(x1, y1, x2, y2) */
+  animation-fill-mode: forwards; /* or: backwards, both, none */
+  animation-delay: .2s; /* or: Xms */
+  animation-name: ngselani;
+
+  position: relative;
+
+  //animation: ngselani 3s;
+}
+
+ion-content
 {
   background-image:url(../assets/b.jpg);background-repeat:no-repeat;
 }
-.header
+ion-title
 {
   background-image:url(../assets/falling_leaves.gif);background-repeat:no-repeat;
 }
