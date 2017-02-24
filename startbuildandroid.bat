@@ -10,5 +10,5 @@ SET ANDROID_NDK_HOME=c:\Qt\android\android-ndk-r10e-windows-x86
 SET ANT_EXECUTABLE=C:\Qt\android\apache-ant-1.9.5\bin\ant.bat
 SET PATH=%JAVA_HOME%\bin;%ANDROID_HOME%\bin;%PATH%
 
-rem ionic build android 				//--release
-rem ionic run android				    //--release --devide is optional
+rem ionic build android --prod				//--release
+rem ionic run android --prod    		    //--release --devide is optional

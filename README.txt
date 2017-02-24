@@ -11,3 +11,13 @@
 
 ## android build needs JDK & Android SDK:
 	-> use startbuildandroid.bat
+
+## TODO:
+- does it work on older android devices?
+- branding: ico & splash
+- checkin plaforms director?
+- update all npm libs
+- mobile web:
+	-- tab icons are ugly
+	-- ie11: select too small
+	-- check the news

@@ -5,20 +5,48 @@ $font-path: "../assets/fonts";
 @import "ionic.globals";
 
 .ion-ios-bunicon,
-.ion-md-bunicon {
+.ion-md-bunicon,
+.ion-ios-bunicon-outline,
+.ion-md-bunicon-outline
+{
   content: url(../assets/bunny.png);
   width: 24px;
   height: 32px;
   padding: 6px 4px 2px;
   opacity: 0.9;
+  background-color:#387ef5;
+  border-radius: 35px;
 }
 .ion-ios-buncontacticon,
-.ion-md-buncontacticon {
+.ion-md-buncontacticon,
+.ion-ios-buncontacticon-outline,
+.ion-md-buncontacticon-outline
+{
   content: url(../assets/bunny_hopps2.gif);
   width: 24px;
   height: 32px;
   padding: 6px 4px 2px;
   opacity: 0.9;
+  background-color:#387ef5;
+  border-radius: 35px;
+}
+
+.ion-ios-bunicon-outline,
+.ion-md-bunicon-outline,
+.ion-ios-buncontacticon-outline,
+.ion-md-buncontacticon-outline
+{
+  background-color:white;/*mobile web: ?or better transparent?*/
+  /*outline: thin dotted;
+  outline-offset: -1px;
+  border-color: #51a7e8;
+  outline: 2px solid #51a7e8;
+  box-shadow: 0 0 8px 1px #51a7e8;*/
+}
+
+ion-select
+{
+  min-width: 99px;
 }
 
 @keyframes ngforani
