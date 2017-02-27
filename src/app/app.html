@@ -7,7 +7,7 @@
  </ion-header>
  <ion-content class="outer-content">
   <ion-list class="sidemenu4">
-    <button ion-item *ngFor="let p of pages" (click)="openPage(p)" class="sidemenu5">
+    <button ion-item *ngFor="let p of pages; let i = index;" (click)="openPage(p, i)" class="sidemenu5">
       {{p.title}}
     </button>
     <ion-item menuClose detail-none>Close Menu</ion-item>

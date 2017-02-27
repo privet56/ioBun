@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-
+import { Component, ViewChild } from '@angular/core';
+import { Tabs, IonicApp, Platform, MenuController, Nav } from 'ionic-angular';
 import { WelcomePage } from '../welcome/welcome';
 import { HomePage } from '../home/home';
 import { AboutPage } from '../about/about';
@@ -10,8 +10,10 @@ import { ContactPage } from '../contact/contact';
 })
 export class TabsPage
 {
+  @ViewChild('myTabs') tabRef: Tabs;
   
-  static __tabs:Array<{title:string,tab:any,tabIcon:string}> = []; 
+  static __tabs:Array<{title:string,tab:any,tabIcon:string}> = [];
+  static __me:TabsPage=null;
 
   tab0Root: any = WelcomePage;
   tab1Root: any = HomePage;
@@ -27,6 +29,11 @@ export class TabsPage
 
   constructor()
   {
+    TabsPage.__me   = this;
     TabsPage.__tabs = this.tabs;
+  }
+  selectTabByIndex(idx:number)
+  {
+    this.tabRef.select(idx);
   }
 }
