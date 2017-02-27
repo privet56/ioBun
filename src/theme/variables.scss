@@ -44,6 +44,14 @@ $font-path: "../assets/fonts";
   box-shadow: 0 0 8px 1px #51a7e8;*/
 }
 
+ion-item
+{
+  background-color: transparent !important;
+  /*background-color: #f0fcea !important;*/
+  text-align:center;
+  align-content: center;
+}
+
 .contentheader
 {
   width:100%;
