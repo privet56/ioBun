@@ -44,6 +44,17 @@ $font-path: "../assets/fonts";
   box-shadow: 0 0 8px 1px #51a7e8;*/
 }
 
+.contentheader
+{
+  width:100%;
+  background-color: #e8f2e3 !important;
+}
+ion-select
+{
+  min-width: 55%;
+  /*color:red;*/
+  background-color: #f0fcea;
+}
 ion-select
 {
   min-width: 99px;

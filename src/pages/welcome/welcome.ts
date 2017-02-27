@@ -84,7 +84,8 @@ export class WelcomePage
     {
       //TODO: check if it is working on device
       //return picNames;
-      return this.getPicsOfAllCats();
+      return this.getPicsOfASingleBun();
+      //return this.getPicsOfAllCats();
     }
     let picCount = this.categories.get(this.category);
 
@@ -96,6 +97,11 @@ export class WelcomePage
     }
     return picNames;
   }
+  public aSingleBun : Array<string> = ["lea"];
+  public getPicsOfASingleBun() : Array<string>
+  {
+    return this.aSingleBun;
+  }  
   public getPicsOfAllCats() : Array<string>
   {
     let picNames:Array<string> = new Array<string>();
