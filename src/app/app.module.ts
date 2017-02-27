@@ -21,7 +21,16 @@ import { WelcomePage } from '../pages/welcome/welcome';
     TabsPage
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp,
+    {
+      menuType: 'push',
+      platforms:
+      {
+        ios: {
+          menuType: 'overlay',
+        }
+      }
+    })
   ],
   bootstrap: [IonicApp],
   entryComponents: [

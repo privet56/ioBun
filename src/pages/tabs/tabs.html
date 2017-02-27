@@ -2,7 +2,13 @@
   <!-- tabIcon="home"  -->
   <!--  icon-on="bun" icon-off="bun" -->
   <!-- icon="bunicon" -->
-  <ion-tab [root]="tab0Root" tabTitle="Bunny Pics"
+  <ion-tab *ngFor="let tab of tabs"
+    [root]="tab.tab"
+    tabTitle="{{tab.title}}"
+    tabIcon="{{tab.tabIcon}}">
+  </ion-tab>
+
+  <!-- ion-tab [root]="tab0Root" tabTitle="Bunny Pics"
     tabIcon="bunicon" >
   </ion-tab>
 
@@ -12,5 +18,5 @@
   <ion-tab [root]="tab2Root" tabTitle="About" tabIcon="information-circle"></ion-tab>
   <ion-tab [root]="tab3Root" tabTitle="Contact"
     tabIcon="buncontacticon">
-   </ion-tab>
+   </ion-tab -->
 </ion-tabs>
