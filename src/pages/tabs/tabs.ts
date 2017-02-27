@@ -32,8 +32,9 @@ export class TabsPage
     TabsPage.__me   = this;
     TabsPage.__tabs = this.tabs;
   }
-  selectTabByIndex(idx:number)
+  selectTabByIndex(idx:number):boolean
   {
     this.tabRef.select(idx);
+    return false;
   }
 }

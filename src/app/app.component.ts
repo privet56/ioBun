@@ -25,11 +25,11 @@ export class MyApp
       this.pages = TabsPage.__tabs; 
     });
   }
-  openPage(page:any, idx:number)
+  openPage(page:any, idx:number):boolean
   {
     this.menu.close();
     //this would replace the tabs...
     //this.nav.setRoot(page.tab);
-    TabsPage.__me.selectTabByIndex(idx);
+    return TabsPage.__me.selectTabByIndex(idx);
   }
 }
