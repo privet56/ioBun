@@ -13,15 +13,7 @@
 	-> use startbuildandroid.bat
 
 ## TODO:
-- does it work on older android devices?
-	ionic run android --prod --consolelogs --livereload
-	device-usb & chrome://inspect/#devices
-- center select rows 
-- branding: ico & splash
-- checkin plaforms directory?
 - update all npm libs
 - mobile web:
-	-- tab icons are ugly
 	-- ie11: select too small
-	-- check the news
 - splash longer: http://www.codingandclimbing.co.uk/blog/ionic-2-fix-splash-screen-white-screen-issue-14 & http://stackoverflow.com/questions/41544016/white-screen-after-splashscreen-ionic2-android-device
