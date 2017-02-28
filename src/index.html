@@ -26,10 +26,35 @@
   <link href="build/main.css" rel="stylesheet">
 
 </head>
-<body>
+<body style="background-color:#d1f2bc;">
 
   <!-- Ionic's root component and where the app will load -->
-  <ion-app></ion-app>
+  <ion-app>
+    <div style="text-align:center;padding-top:99px;">
+      Loading...
+      <br />
+      <br />
+      <br />
+      <style>
+        .wait
+        {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 200px;
+            height: 188px;
+            margin:-99px 0 0 -99px;/*50% of width */
+            -webkit-animation:spin 2s linear infinite;
+            -moz-animation:spin 2s linear infinite;
+            animation:spin 2s linear infinite;
+        }
+        @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+        @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+        @keyframes spin { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+      </style>
+      <img src="assets/bunny.png" class="wait" />
+    </div>
+  </ion-app>
 
   <!-- The polyfills js is generated during the build process -->
   <script src="build/polyfills.js"></script>
