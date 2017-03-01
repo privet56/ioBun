@@ -13,7 +13,10 @@
 	-> use startbuildandroid.bat
 
 ## TODO:
+- animate with (flip) button
+- animate background
 - update all npm libs
+- android: all tab icons are blue?
 - mobile web:
 	-- ie11: select too small
 - splash longer: http://www.codingandclimbing.co.uk/blog/ionic-2-fix-splash-screen-white-screen-issue-14 & http://stackoverflow.com/questions/41544016/white-screen-after-splashscreen-ionic2-android-device

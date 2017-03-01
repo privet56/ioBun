@@ -31,18 +31,28 @@ $font-path: "../assets/fonts";
   border-radius: 35px;
 }
 
+/*
+*-outline = NOT-selected version //doesn't work for android.!?
+*/
+
 .ion-ios-bunicon-outline,
 .ion-md-bunicon-outline,
 .ion-ios-buncontacticon-outline,
 .ion-md-buncontacticon-outline
 {
-  background-color:white;/*mobile web: ?or better transparent?*/
+  background-color:white !important;/*mobile web: ?or better transparent?*/
   /*outline: thin dotted;
   outline-offset: -1px;
   border-color: #51a7e8;
   outline: 2px solid #51a7e8;
   box-shadow: 0 0 8px 1px #51a7e8;*/
 }
+
+.tab-button[aria-selected=false] ion-icon
+{
+  background-color:white !important;/*mobile web: ?or better transparent?*/
+}
+
 
 ion-item
 {
