@@ -10,7 +10,7 @@
 <ion-list text-center>
     <ion-list-header class="contentheader">Contact us</ion-list-header>
     <ion-item>
-      <img src="assets/lea.png" />
+      <img #leaImg src="assets/lea.png" />
     </ion-item>
 
     <ion-item>
@@ -21,4 +21,11 @@
       </a>
     </ion-item>
   </ion-list>
+
+  <ion-fab bottom center>
+	  <button	ion-fab	#thisEl	(click)="animateMe(thisEl)">
+      <ion-icon	name="nutrition"></ion-icon>
+    </button> 
+  </ion-fab>
+ 
 </ion-content>

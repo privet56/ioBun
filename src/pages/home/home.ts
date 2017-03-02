@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
-import {RedditService} from '../../app/services/reddit.service';
-import {DetailsPage} from '../details/details';
+import { RedditService } from '../../app/services/reddit.service';
+import { DetailsPage } from '../details/details';
+import {	NavController,	LoadingController,	ToastController	}	from	'ionic-angular'; 
  
 @Component({
   selector: 'page-home',
@@ -13,7 +13,10 @@ export class HomePage
   category: any = null;
   limit:any = 10;
 
-  constructor(public navCtrl: NavController, private redditService:RedditService)
+  constructor(public navCtrl:NavController,
+              private redditService:RedditService,
+              private loadingCtrl:LoadingController,
+              public toastCtrl:ToastController)
   {
    this.getDefaults();
   }
@@ -64,5 +67,24 @@ export class HomePage
   changeCategory()
   {
     this.getPosts(this.category, this.limit);
+  }
+  ionViewDidLoad()
+  {
+    
+  }
+	ionViewWillEnter()    //comes after ionViewDidLoad 
+  {
+    setTimeout(() =>
+    {
+      let	toast	=	this.toastCtrl.create({
+        message:	'Choose a category',
+        position:	'middle', //top,bottom,middle
+        showCloseButton: true,
+        closeButtonText:'x',
+        dismissOnPageChange:true,
+        //cssClass:'toast',
+        duration:	2000});
+      toast.present();
+    }, 333);
   }
 }

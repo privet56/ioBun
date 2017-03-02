@@ -12,6 +12,20 @@
 
 
 <ion-content padding>
+
+<ul	class="bg-bgani">
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+	<li></li>
+</ul>
+
     <ion-list>
       <ion-item class="contentheader">
         <ion-label fixed>Seethearts:</ion-label>
@@ -29,10 +43,10 @@
       </ion-item>
     </ion-list>
     <ion-list>
-      <ion-item *ngIf="items">
+      <ion-item *ngIf="items" class="contentheader">
         There are {{ items.length }} News found for {{category}}
       </ion-item>
-      <ion-item *ngFor="let item of items">
+      <ion-item *ngFor="let item of items" class="contentheader">
         <ion-thumbnail *ngIf="item.data.thumbnail" item-left>
           <img src="{{item.data.thumbnail}}">
         </ion-thumbnail>

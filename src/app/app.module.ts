@@ -24,6 +24,12 @@ import { WelcomePage } from '../pages/welcome/welcome';
     IonicModule.forRoot(MyApp,
     {
       menuType: 'push',
+	    backButtonText:	'<<',
+      iconMode:	'md',
+      modalEnter:	'modal-slide-in',
+      modalLeave:	'modal-slide-out',
+      tabbarPlacement:	'bottom',
+      pageTransition:	'ios',	
       platforms:
       {
         ios: {
