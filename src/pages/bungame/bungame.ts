@@ -10,6 +10,8 @@ import {Ball} from "./ball";
 })
 export class BunGamePage
 {
+  public static __isDemoTime:boolean = false; 
+
   @ViewChild('bungamecanvas') bunGameCanvasEleRef :	ElementRef;
   @ViewChild('ioncontent') ionContentEleRef :	ElementRef;
   @ViewChild('ioncontentheader') ionContentHeaderEleRef :	ElementRef;
@@ -57,25 +59,50 @@ export class BunGamePage
       
       camera.setTarget(BABYLON.Vector3.Zero()); //target the camera to scene origin
 
-      this.balls.push(new Ball("sphere1", 16/*subdivs*/, 2/*size*/, scene, ground.physicsImpostor));
+      this.makeBalls(5, scene, ground);
 
       engine.runRenderLoop(() =>
       {
         scene.render();
 
-        this.balls.forEach((ball:Ball) =>
-        {
-          if(!ball.isDisposed())
-            ball.update();
-          else
+        { //cleanup
+          this.balls.forEach((ball:Ball, index, object) =>
           {
-            //TODO: remove this ball
+            if(ball.isDisposed())
+            {
+              object.splice(index, 1);
+            }
+          });
+        }
+        { //update
+          this.balls.forEach((ball:Ball) =>
+          {
+              ball.update();
+          });
+        }
+        { //fill again
+          if(this.balls.length < 3)
+          {
+            this.makeBalls(5, scene, ground);
           }
-        });
+        }
         
       });
 
     }, 33);
+  }
+
+  protected makeBalls(add:number, scene:BABYLON.Scene,ground:BABYLON.Mesh) : void
+  {
+    for(let i:number=0;i<add;i++)
+    {
+      if(BunGamePage.__isDemoTime && (this.balls.length > 0))
+      {
+        break;
+      }
+      let size:number = (Math.random() * 1.2) + 0.5;
+      this.balls.push(new Ball(""+(new Date().getTime()), 16/*subdivs*/, size, scene, ground.physicsImpostor));
+    }
   }
 
   public getCanvasSize() : number

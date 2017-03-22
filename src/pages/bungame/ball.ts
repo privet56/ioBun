@@ -20,11 +20,13 @@ export class Ball
 
       //this.ball.material.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
 
-      this.ball.position.y = 6;  // Move the sphere upward 1/2 its height
+      this.ball.position.y = (Math.random() + 2)*1.66;
+      this.ball.position.x = (Math.random() * 3) * (Math.random() > 0.5 ? 1 : -1);
+      this.ball.position.z = (Math.random() + 0.5) * (Math.random() > 0.5 ? 1 : -1);
 
       this.rotSpeed = Math.random() * this.rotSpeed;
 
-      this.ball.physicsImpostor = new BABYLON.PhysicsImpostor(this.ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, restitution: 1.01 }, scene);
+      this.ball.physicsImpostor = new BABYLON.PhysicsImpostor(this.ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1.5, restitution: 1.01 }, scene);
 
       var self = this;
 
@@ -36,24 +38,41 @@ export class Ball
           {
             if(!self.ball)return;
             //fire: https://doc.babylonjs.com/extensions/fire & https://github.com/BabylonJS/Babylon.js/blob/master/dist/preview%20release/materialsLibrary/babylon.fireMaterial.js
-            let ball:BABYLON.Mesh = self.ball;
-            self.ball = null;
-            Ball.explode(scene, ball);
-            setTimeout(() =>
-            {
-              ball.dispose();
-              ball = null;
-            }, 99);
+            self.destroy(true, scene);
           }
       });
+  }
+
+  destroy(withParticles:boolean, scene:BABYLON.Scene) : void
+  {
+      if(!this.ball)return;
+
+      let ball:BABYLON.Mesh = this.ball;
+      this.ball = null;
+      if(withParticles)
+      {
+        Ball.explode(scene, ball);
+      }
+      setTimeout(() =>
+      {
+        ball.dispose();
+        ball = null;
+      }, 99);
   }
 
   public update():void
   {
     if(!this.ball)return;
+
+    if(this.ball.position.y < -9)
+    {
+      return this.destroy(false, this.ball.getScene());
+    }
+
     this.ball.rotation.x+=this.rotSpeed;
     this.ball.rotation.y+=this.rotSpeed;
     this.ball.rotation.z+=this.rotSpeed;
+
   }
   protected static explode(scene:BABYLON.Scene, ball:BABYLON.Mesh): void
   {
