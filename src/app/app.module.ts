@@ -7,7 +7,8 @@ import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { SettingsPage } from '../pages/settings/settings';
 import { DetailsPage } from '../pages/details/details';
-import { WelcomePage } from '../pages/welcome/welcome'; 
+import { WelcomePage } from '../pages/welcome/welcome';
+import { BunGamePage } from '../pages/bungame/bungame';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import { WelcomePage } from '../pages/welcome/welcome';
     WelcomePage,
     HomePage,
     SettingsPage,
-    DetailsPage, 
+    DetailsPage,
+    BunGamePage,
     TabsPage
   ],
   imports: [
@@ -46,7 +48,8 @@ import { WelcomePage } from '../pages/welcome/welcome';
     WelcomePage,
     HomePage,
     SettingsPage,
-    DetailsPage, 
+    DetailsPage,
+    BunGamePage,
     TabsPage
   ],
   providers: [{provide: ErrorHandler, useClass: IonicErrorHandler}]

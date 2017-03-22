@@ -4,6 +4,7 @@ import { WelcomePage } from '../welcome/welcome';
 import { HomePage } from '../home/home';
 import { AboutPage } from '../about/about';
 import { ContactPage } from '../contact/contact';
+import { BunGamePage } from '../bungame/bungame';
 
 @Component({
   templateUrl: 'tabs.html'
@@ -19,10 +20,12 @@ export class TabsPage
   tab1Root: any = HomePage;
   tab2Root: any = AboutPage;
   tab3Root: any = ContactPage;
+  tab4Root: any = BunGamePage;
 
   tabs:Array<{title:string,tab:any,tabIcon:string}> = [
     {title:"Bunny Pics" , tab:this.tab0Root, tabIcon:'bunicon'},
     {title:"Bunny News" , tab:this.tab1Root, tabIcon:'bunicon'},
+    {title:"BunGame"    , tab:this.tab4Root, tabIcon:'planet'},
     {title:"About"      , tab:this.tab2Root, tabIcon:'information-circle'},
     {title:"Contact"    , tab:this.tab3Root, tabIcon:'buncontacticon'},
   ];

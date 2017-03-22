@@ -28,6 +28,8 @@ plugins/android.json
 plugins/ios.json
 www/
 $RECYCLE.BIN/
+Babylon.js/
+_________Babylon.js____________/
 
 .DS_Store
 Thumbs.db

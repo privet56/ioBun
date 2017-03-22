@@ -12,6 +12,15 @@
 ## android build needs JDK & Android SDK:
 	-> use startbuildandroid.bat
 
+## how to install Babylon.js:
+ 	git clone https://github.com/BabylonJS/Babylon.js.git
+	cd babylon.js/Tools/Gulp
+	npm install
+	cd..
+	cd..
+	cd..
+	cp babylon.js/dist/* assets/babylonjs/
+
 ## TODO:
 - update all npm libs
 - mobile web:
