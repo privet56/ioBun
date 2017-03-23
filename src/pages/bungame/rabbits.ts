@@ -7,6 +7,7 @@ export class Rabbits
 {
   protected rabbits:Array<BABYLON.AbstractMesh> = new Array<BABYLON.AbstractMesh>();
   protected rotSpeed:number = 0.09;
+  public static __clapSound : BABYLON.Sound = null;
 
   constructor(public scene:BABYLON.Scene, createRabbits:number)
   {
@@ -14,6 +15,10 @@ export class Rabbits
       {
           this.createRabbit();
       }
+
+      if(!Rabbits.__clapSound)Rabbits.__clapSound    = new BABYLON.Sound("Music", "assets/sound/clap.mp3", scene, null,
+        { loop: false, autoplay: false, volume:0.55 }
+      );
   }
 
   public update() : void
@@ -34,6 +39,21 @@ export class Rabbits
   }
   public createRabbit() : void
   {
+      if(this.rabbits.length > 6)
+      {
+          this.rabbits.forEach((rabbit:BABYLON.AbstractMesh) =>
+          {
+            setTimeout(() =>
+            {
+                rabbit.dispose();
+                rabbit = null;
+            }, 99);
+          });
+          this.rabbits = new Array<BABYLON.AbstractMesh>();
+          Rabbits.__clapSound.play();
+          return;
+      }
+
     var self = this;
     BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[])
     { 

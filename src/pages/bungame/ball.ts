@@ -7,6 +7,8 @@ export class Ball
 {
   public static __woodTexture : BABYLON.Texture = null;
   public static __grassTexture : BABYLON.Texture = null;
+  public static __collSound : BABYLON.Sound = null;
+  public static __hitSound : BABYLON.Sound = null;
 
   protected ball:BABYLON.Mesh = null;
   protected rotSpeed:number = 0.09;
@@ -16,8 +18,16 @@ export class Ball
   {
       this.ball = BABYLON.Mesh.CreateSphere(name, subdivs, size, scene);
 
-      if(!Ball.__woodTexture) Ball.__woodTexture    = new BABYLON.Texture("assets/wood.png", scene);
-      if(!Ball.__grassTexture) Ball.__grassTexture  = new BABYLON.Texture("assets/lea.png", scene);
+      { //INIT
+        if(!Ball.__woodTexture)   Ball.__woodTexture  = new BABYLON.Texture("assets/wood.png", scene);
+        if(!Ball.__grassTexture)  Ball.__grassTexture = new BABYLON.Texture("assets/lea.png", scene);
+        if(!Ball.__collSound)     Ball.__collSound    = new BABYLON.Sound("Music", "assets/sound/HitsAccept2.wav", scene, null,
+          { loop: false, autoplay: false, volume:0.05 }
+        );
+        if(!Ball.__hitSound)     Ball.__hitSound    = new BABYLON.Sound("Music", "assets/sound/Power_Pick_Up_06.wav", scene, null,
+          { loop: false, autoplay: false, volume:0.55 }
+        );
+      }
 
       var materialSphere = (Math.random() > 0.5) ? new BABYLON.StandardMaterial("assets/grass.png", scene) : new BABYLON.StandardMaterial("assets/wood.png", scene);
       this.ball.material = materialSphere;
@@ -41,7 +51,7 @@ export class Ball
       {
           if(!self.ball)return;
 
-          //TODO: sound!
+          Ball.__collSound.play();
 
           iCollided++;
           materialSphere.diffuseColor.r+=0.2;
@@ -72,7 +82,6 @@ export class Ball
     return this.isHit;
   }
 
-
   destroy(withParticles:boolean, useCarrots:boolean, scene:BABYLON.Scene) : void
   {
       if(!this.ball)return;
@@ -95,6 +104,7 @@ export class Ball
     if(!this.ball)return;
     this.isHit = true;
     this.destroy(true, true, this.ball.getScene());
+    Ball.__hitSound.play();
   }
 
   public update():void

@@ -19,17 +19,22 @@ export class BunGamePage
   @ViewChild('ionlist') ionListEleRef :	ElementRef;
 
   balls:Array<Ball> = new Array<Ball>();
+  protected isActiveTab : boolean = false;
 
   constructor(public navCtrl: NavController, private loadingCtrl:LoadingController)
   {
 
   }
 
-  //TODO: STOP when ionViewWillBeAway!!!
+  ionViewWillLeave()
+  {
+    this.isActiveTab = false;
+  }
 
 	ionViewWillEnter()    //comes after ionViewDidLoad 
   {
-    if(this.balls.length > 0)return;
+      this.isActiveTab = true;
+      if(this.balls.length > 0)return;
 
       let canvas:HTMLCanvasElement = this.bunGameCanvasEleRef.nativeElement;
       canvas.height = canvas.width = this.getCanvasSize();
@@ -83,6 +88,8 @@ export class BunGamePage
 
       engine.runRenderLoop(() =>
       {
+        if(!this.isActiveTab)return;
+
         scene.render();
 
         { //cleanup
@@ -93,7 +100,6 @@ export class BunGamePage
               if(ball.isBallHit())
               {
                 rabbits.createRabbit();
-                //TODO: claim GAME OVER
               }
               object.splice(index, 1);
             }
@@ -150,6 +156,8 @@ export class BunGamePage
         min = Math.min(p.clientWidth, p.clientHeight);
       }*/
       //let min:number = this.ionContentHeaderEleRef.nativeElement.clientWidth;
+
+      //TODO: handle better left/right margins & landscape orientation
 
       let ioncontent:HTMLElement = document.getElementById('ioncontent');
       let min:number = Math.min(ioncontent.clientHeight, ioncontent.clientWidth);
