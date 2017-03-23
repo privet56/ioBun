@@ -20,6 +20,7 @@ export class BunGamePage
 
   balls:Array<Ball> = new Array<Ball>();
   protected isActiveTab : boolean = false;
+  protected isBallsAllowed : boolean = false;
 
   constructor(public navCtrl: NavController, private loadingCtrl:LoadingController)
   {
@@ -33,6 +34,8 @@ export class BunGamePage
 
 	ionViewWillEnter()    //comes after ionViewDidLoad 
   {
+    try
+    {
       this.isActiveTab = true;
       if(this.balls.length > 0)return;
 
@@ -83,8 +86,15 @@ export class BunGamePage
       
       camera.setTarget(BABYLON.Vector3.Zero()); //target the camera to scene origin
 
-      this.makeBalls(5, scene, ground, shadowGenerator);
       let rabbits:Rabbits = new Rabbits(scene, BunGamePage.__isDemoTime ? 1 : 0);
+
+      this.onWon();
+
+      setTimeout(() =>
+      {
+        this.isBallsAllowed = true;
+
+      }, 1999);
 
       engine.runRenderLoop(() =>
       {
@@ -99,7 +109,9 @@ export class BunGamePage
             {
               if(ball.isBallHit())
               {
-                rabbits.createRabbit();
+                let won : boolean = rabbits.createRabbit();
+                if( won)this.onWon();
+
               }
               object.splice(index, 1);
             }
@@ -128,10 +140,36 @@ export class BunGamePage
         }
         
       });
+    }
+    catch(e)
+    {
+      alert(e.name+"\n"+e.message);
+      //ypeerror cannot read property getextension of null
+      // --> no webgl on old androids! :-() 
+    }
+  }
+
+  protected onWon() : void
+  {
+      this.balls.forEach((ball:Ball) =>
+      {
+        if(ball.getMesh())
+        {
+           ball.destroy(true, false, ball.getMesh().getScene());
+        }
+      });
+      this.balls = new Array<Ball>();
+      this.isBallsAllowed = false;
+      setTimeout(() =>
+      {
+        this.isBallsAllowed = true;
+      }, 1999);
   }
 
   protected makeBalls(add:number, scene:BABYLON.Scene,ground:BABYLON.Mesh, shadowGenerator:BABYLON.ShadowGenerator) : void
   {
+    if(!this.isBallsAllowed) return;
+
     for(let i:number=0;i<add;i++)
     {
       if(BunGamePage.__isDemoTime && (this.balls.length > 0))

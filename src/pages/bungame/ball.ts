@@ -19,8 +19,8 @@ export class Ball
       this.ball = BABYLON.Mesh.CreateSphere(name, subdivs, size, scene);
 
       { //INIT
-        if(!Ball.__woodTexture)   Ball.__woodTexture  = new BABYLON.Texture("assets/wood.png", scene);
-        if(!Ball.__grassTexture)  Ball.__grassTexture = new BABYLON.Texture("assets/lea.png", scene);
+        if(!Ball.__woodTexture)   Ball.__woodTexture  = new BABYLON.Texture("assets/wood.png" , scene);
+        if(!Ball.__grassTexture)  Ball.__grassTexture = new BABYLON.Texture("assets/lea.png"  , scene);
         if(!Ball.__collSound)     Ball.__collSound    = new BABYLON.Sound("Music", "assets/sound/HitsAccept2.wav", scene, null,
           { loop: false, autoplay: false, volume:0.05 }
         );

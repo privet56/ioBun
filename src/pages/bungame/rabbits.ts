@@ -19,6 +19,12 @@ export class Rabbits
       if(!Rabbits.__clapSound)Rabbits.__clapSound    = new BABYLON.Sound("Music", "assets/sound/clap.mp3", scene, null,
         { loop: false, autoplay: false, volume:0.55 }
       );
+
+      setTimeout(() =>
+      {
+          this.firework();
+
+      }, 999);
   }
 
   public update() : void
@@ -37,7 +43,7 @@ export class Rabbits
           }
       }
   }
-  public createRabbit() : void
+  public createRabbit() : boolean
   {
       if(this.rabbits.length > 6)
       {
@@ -50,8 +56,9 @@ export class Rabbits
             }, 99);
           });
           this.rabbits = new Array<BABYLON.AbstractMesh>();
+          this.firework();
           Rabbits.__clapSound.play();
-          return;
+          return true;
       }
 
     var self = this;
@@ -113,5 +120,45 @@ export class Rabbits
         }*/
         self.rabbits.push(buns[0]);
     });
+
+    return false;
+  }
+  protected firework() : void
+  {
+    var scene = this.scene;
+    var useCarrots = false;
+
+    var fountain = BABYLON.Mesh.CreateBox("foutain", 1.0, scene);
+    fountain.position = new BABYLON.Vector3(0,0,0);
+	fountain.isVisible = false;
+
+    var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
+
+    particleSystem.particleTexture = new BABYLON.Texture("assets/lensflare/lensflare0.png", scene);
+    particleSystem.emitter = fountain;
+    particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
+    particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0);
+    particleSystem.color1     = new BABYLON.Color4(0.7, 0.8, 1.0, 1.0);
+    particleSystem.color2     = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+    particleSystem.colorDead  = new BABYLON.Color4(0.2, 0.5, 1.0, 1.0);
+    particleSystem.minSize = useCarrots ? 0.001 : 1;
+    particleSystem.maxSize = useCarrots ? 0.5 : 11;
+    particleSystem.minLifeTime = useCarrots ? 0.2 : 1;
+    particleSystem.maxLifeTime = useCarrots ? 0.3 : 1;
+    particleSystem.emitRate = useCarrots ? 55 : 500;
+    particleSystem.blendMode = useCarrots ? BABYLON.ParticleSystem.BLENDMODE_STANDARD : BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+    particleSystem.gravity    = new BABYLON.Vector3(0, 0, 0);
+    particleSystem.direction1 = useCarrots ? new BABYLON.Vector3(-1, 1, 1) : new BABYLON.Vector3(-5, 5, 5);
+    particleSystem.direction2 = useCarrots ? new BABYLON.Vector3(1, -1, -1) : new BABYLON.Vector3(5, -5, -5);
+    particleSystem.minAngularSpeed = 0;
+    particleSystem.maxAngularSpeed = Math.PI;
+    particleSystem.minEmitPower = 3;
+    particleSystem.maxEmitPower = 6;
+    particleSystem.updateSpeed = useCarrots ? 0.0025 : 0.025;
+    
+    particleSystem.targetStopDuration = 0.5;
+    particleSystem.disposeOnStop = true;
+    
+    particleSystem.start();
   }
 }
