@@ -40,6 +40,9 @@ export class Ball
       this.ball.physicsImpostor.registerOnPhysicsCollide(groundImpostor, function(main, collided)
       {
           if(!self.ball)return;
+
+          //TODO: sound!
+
           iCollided++;
           materialSphere.diffuseColor.r+=0.2;
           materialSphere.diffuseColor.g-=0.2;
