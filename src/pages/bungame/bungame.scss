@@ -5,7 +5,11 @@ page-bungame
 
 #bungamecanvas
 {
-    margin-left:-40px;
+    position: absolute;/*clicks work only if absolute!? */
+    text-align: center;
+    vertical-align: middle;
+    left:0px;
     background: transparent !important;
     background-color: transparent !important;
+    z-index: 999999;
 }
