@@ -1,5 +1,6 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
+import { Platform } from 'ionic-angular';
 import {Ball} from "./ball";
 import {Sun} from "./sun";
 import {Rabbits} from "./rabbits";
@@ -23,7 +24,9 @@ export class BunGamePage
   protected isActiveTab : boolean = false;
   protected isBallsAllowed : boolean = false;
 
-  constructor(public navCtrl: NavController, private loadingCtrl:LoadingController)
+  public msg:string = "";
+
+  constructor(public navCtrl: NavController, private loadingCtrl:LoadingController, public platform: Platform)
   {
 
   }
@@ -35,13 +38,14 @@ export class BunGamePage
 
 	ionViewWillEnter()    //comes after ionViewDidLoad 
   {
+    let canvas:HTMLCanvasElement = null;
+
     try
     {
       this.isActiveTab = true;
       if(this.balls.length > 0)return;
-
-      let canvas:HTMLCanvasElement = this.bunGameCanvasEleRef.nativeElement;
-      canvas.height = canvas.width = this.getCanvasSize();
+      canvas = this.bunGameCanvasEleRef.nativeElement;
+      canvas.style.height = canvas.style.width = this.getCanvasSize();
       var engine:BABYLON.Engine = new BABYLON.Engine(canvas);
       var scene :BABYLON.Scene  = new BABYLON.Scene(engine);
       scene.clearColor = new BABYLON.Color4(0,0,0,0.0000000000000001);  //=set transparent background
@@ -130,6 +134,7 @@ export class BunGamePage
     }
     catch(e)
     {
+      canvas.style.backgroundColor = "red !important";
       alert(e.name+"\n"+e.message);
       //ypeerror cannot read property getextension of null
       // --> no webgl on old androids! :-() 
@@ -170,22 +175,53 @@ export class BunGamePage
     }
   }
 
-  public getCanvasSize() : number
+  public getCanvasSize() : string
   {
-      /*let p = canvas.parentElement;//document.body
-      //let p = document.body;
-      let p = this.ionListEleRef.nativeElement;
-      let min:number = Math.max(p.clientWidth, p.clientHeight);
-      if(p.clientWidth > p.clientHeight)
+      //TODO: handle rotation!
+
+      let min:number = 375;
+
+      let isPortrait:boolean  = this.platform.isPortrait();
+      if (isPortrait)
       {
-        min = Math.min(p.clientWidth, p.clientHeight);
+        min = document.body.clientWidth;
+      }
+      else
+      {
+        min = document.body.clientHeight;
+        //let ioncontent:HTMLElement = document.getElementById('ioncontent');
+        //min = Math.min(ioncontent.clientHeight, ioncontent.clientWidth);
+      }
+
+      min = Math.max(min, 375);
+      min = 3/4 * min;            //  pt = 3/4 * px
+
+      /*if(isMobile)    //not needed
+      {
+        if(window.location.search && window.location.search.indexOf('ionicplatform'))
+        {
+          //http://localhost:8100/ionic-lab --> !adjust resolution
+        }
+        else
+        {
+          //TODO: get resolution!
+          //min /= 2;
+        }
       }*/
-      //let min:number = this.ionContentHeaderEleRef.nativeElement.clientWidth;
+      /*{
+        let isMobile:boolean    = this.platform.is("mobile");
 
-      //TODO: handle better left/right margins & landscape orientation
+        //chrome:       portrait:true height:821  width:736 onMobile:false
+        //lab-ios-sim:  portrait:true height:667  width:375 onMobile:true
+        //lab-and-sim:  portrait:true height:647  width:375 onMobile:true
+        //android-sim:  portrait:true height:1232 width:800 onMobile:true
+        
+        let msg:string = "p:"+isPortrait+" h:"+document.body.clientHeight+" w:"+document.body.clientWidth+" mob:"+isMobile+" >"+min;
+        //this.msg += msg;
+        console.log(msg);
+      }*/
 
-      let ioncontent:HTMLElement = document.getElementById('ioncontent');
-      let min:number = Math.min(ioncontent.clientHeight, ioncontent.clientWidth);
-      return min;
+      //use pt instead of px, so are you resolution independent!!!
+      return min+"pt";
   }
 }
