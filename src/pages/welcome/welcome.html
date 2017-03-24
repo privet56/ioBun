@@ -40,7 +40,7 @@
 
     <ion-list>
       <ion-item *ngFor="let picName of getPicsOfSelectedCat()" class="ngfor" #ionItem>
-        <img src="assets/bunpics/{{picName}}.png" (click)="onBunClick($event, ionItem)" />
+        <img src="assets/bunpics/{{picName}}.{{picName === 'lea' ? 'png' : 'jpg'}}" (click)="onBunClick($event, ionItem)" />
       </ion-item>
     </ion-list>
     <ion-list>
