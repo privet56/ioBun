@@ -1,6 +1,7 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
 import {Ball} from "./ball";
+import {Sun} from "./sun";
 import {Rabbits} from "./rabbits";
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
@@ -49,23 +50,12 @@ export class BunGamePage
       //camera.attachControl(canvas, true); //if activated, you can look around by dragging... 
 
       let shadowGenerator:BABYLON.ShadowGenerator = null;
-      let sun:BABYLON.Mesh = BABYLON.Mesh.CreateSphere("sun", 10/*segments*/, 3/*diameter*/, scene);
+      let sun:Sun = new Sun(scene);
+      //let sun:BABYLON.Mesh = BABYLON.Mesh.CreateSphere("sun", 10/*segments*/, 3/*diameter*/, scene);
       {
         var light2 = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
 
-        var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(1/*right*/, 5/*up*/, -1/*behind/before*/), scene);
-        light.intensity = 0.7;
-        
-        let material:BABYLON.StandardMaterial = new BABYLON.StandardMaterial("sun", scene);
-        material.diffuseTexture = new BABYLON.Texture("assets/sun.png", scene);
-        material.emissiveColor = new BABYLON.Color3(1, 1, 0);
-        material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-        sun.material = material;
-        sun.parent = light;
-        sun.position.z += 6;  //put in background
-        sun.position.y -= 3;  //put in background
-
-        shadowGenerator = new BABYLON.ShadowGenerator(512, light);
+        shadowGenerator = new BABYLON.ShadowGenerator(512, sun.getLight());
         shadowGenerator.useVarianceShadowMap = true;
       }
       {
@@ -102,6 +92,8 @@ export class BunGamePage
 
         scene.render();
 
+        let refreshRate:number = 1; //TODO: calc refreshRate based on 60 fps
+
         { //cleanup
           this.balls.forEach((ball:Ball, index, object) =>
           {
@@ -118,9 +110,13 @@ export class BunGamePage
           });
         }
         { //update
+
+          sun.update(refreshRate);
+          rabbits.update(refreshRate);
+
           this.balls.forEach((ball:Ball) =>
           {
-              ball.update();
+              ball.update(refreshRate);
           });
         }
         { //fill again
@@ -128,15 +124,6 @@ export class BunGamePage
           {
             this.makeBalls(5, scene, ground, shadowGenerator);
           }
-        }
-        {//sun
-          let rotSpeed:number = 0.002;
-          sun.rotation.x+=rotSpeed;
-          sun.rotation.y+=rotSpeed;
-          sun.rotation.z+=rotSpeed;
-        }
-        { //rabbits
-          rabbits.update();
         }
         
       });

@@ -1,14 +1,16 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
+import { SceneObject	} from	'./sceneobject';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
-export class Ball
+export class Ball implements SceneObject
+
 {
-  public static __woodTexture : BABYLON.Texture = null;
-  public static __grassTexture : BABYLON.Texture = null;
-  public static __collSound : BABYLON.Sound = null;
-  public static __hitSound : BABYLON.Sound = null;
+  public static __woodTexture   : BABYLON.Texture = null;
+  public static __grassTexture  : BABYLON.Texture = null;
+  public static __collSound     : BABYLON.Sound   = null;
+  public static __hitSound      : BABYLON.Sound   = null;
 
   protected ball:BABYLON.Mesh = null;
   protected rotSpeed:number = 0.09;
@@ -107,7 +109,7 @@ export class Ball
     Ball.__hitSound.play();
   }
 
-  public update():void
+  public update(refreshRate:number):void
   {
     if(!this.ball)return;
 
@@ -119,7 +121,6 @@ export class Ball
     this.ball.rotation.x+=this.rotSpeed;
     this.ball.rotation.y+=this.rotSpeed;
     this.ball.rotation.z+=this.rotSpeed;
-
   }
   protected static explode(scene:BABYLON.Scene, ball:BABYLON.Mesh, useCarrots:boolean): void
   {

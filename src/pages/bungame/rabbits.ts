@@ -1,9 +1,10 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
+import { SceneObject	} from	'./sceneobject';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
-export class Rabbits
+export class Rabbits implements SceneObject
 {
   protected rabbits:Array<BABYLON.AbstractMesh> = new Array<BABYLON.AbstractMesh>();
   protected rotSpeed:number = 0.09;
@@ -27,7 +28,7 @@ export class Rabbits
       }, 999);
   }
 
-  public update() : void
+  public update(refreshRate:number) : void
   {
       for(let i=0;i<this.rabbits.length;i++)
       {
@@ -62,16 +63,33 @@ export class Rabbits
       }
 
     var self = this;
-    BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[])
-    { 
+
+    //actually Mesh.clone would be nicer...
+    BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[], particleSystems:BABYLON.ParticleSystem[], skeletons:BABYLON.Skeleton[])
+    {
+        {   //TODO: use skeletons[0]
+            //Rabbit.babylon has:
+            //2 console.log("#meshes:"+buns.length);
+            //0 console.log("#partSs:"+particleSystems.length);
+            //1 console.log("#Skelet:"+skeletons.length);
+        }
+
+        let bun : BABYLON.AbstractMesh = buns[(self.rabbits.length % 2 == 0) ? 0 : buns.length - 1];
+
+        {
+            let to:number       = 100 - (self.rabbits.length * 10);
+            let speed:number    = 1.0 - (self.rabbits.length / 10);
+            self.scene.beginAnimation(skeletons[0], 0/*from*/, to/*to*/, true/*loop*/, speed);
+        }
+
         let xOffset:number = -3.5;
         xOffset += (self.rabbits.length * 0.95);
-        buns[0].position    = new BABYLON.Vector3(xOffset, 2.95, 2);
-        buns[0].scaling     = new BABYLON.Vector3(0.01, 0.01, 0.01);
+        bun.position    = new BABYLON.Vector3(xOffset, 2.95, 2);
+        bun.scaling     = new BABYLON.Vector3(0.01, 0.01, 0.01);
 
         if(self.rabbits.length > 0)
         {
-            buns[0].rotation.y = self.rabbits[self.rabbits.length - 1].rotation.y;
+            bun.rotation.y = self.rabbits[self.rabbits.length - 1].rotation.y;
         }
 
         {
@@ -118,7 +136,7 @@ export class Rabbits
             backgroundTexture.drawText("Eternalcoding", 0, 0, "bold 70px Segoe UI", "white", "#555555");
             backgroundTexture.drawText("- browsers statistics -", 22, 22, "35px Segoe UI", "white", null);
         }*/
-        self.rabbits.push(buns[0]);
+        self.rabbits.push(bun);
     });
 
     return false;
