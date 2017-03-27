@@ -34,6 +34,10 @@ export class TabsPage
   {
     TabsPage.__me   = this;
     TabsPage.__tabs = this.tabs;
+    setTimeout(() =>
+    {
+      BunGamePage.preload();
+    }, 999);
   }
   selectTabByIndex(idx:number):boolean
   {

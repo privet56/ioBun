@@ -16,7 +16,7 @@ export class Ball implements SceneObject
   protected rotSpeed:number = 0.09;
   protected isHit:boolean = false;
 
-  constructor(name:string, subdivs:number, size:number, scene:BABYLON.Scene, groundImpostor:BABYLON.PhysicsImpostor)
+  constructor(name:string, subdivs:number, size:number, scene:BABYLON.Scene, groundImpostor:BABYLON.PhysicsImpostor, level:number)
   {
       this.ball = BABYLON.Mesh.CreateSphere(name, subdivs, size, scene);
 
@@ -44,7 +44,11 @@ export class Ball implements SceneObject
 
       this.rotSpeed = Math.random() * this.rotSpeed;
 
-      this.ball.physicsImpostor = new BABYLON.PhysicsImpostor(this.ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1.5, restitution: 1.01 }, scene);
+      let restitution: number = 0.3 * level;
+      if (restitution > 1.1)
+          restitution = 1.1;
+
+      this.ball.physicsImpostor = new BABYLON.PhysicsImpostor(this.ball, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1.5, restitution: restitution }, scene);
 
       var self = this;
       let iCollided:number = 0;
@@ -118,9 +122,9 @@ export class Ball implements SceneObject
       return this.destroy(false, false, this.ball.getScene());
     }
 
-    this.ball.rotation.x+=this.rotSpeed;
-    this.ball.rotation.y+=this.rotSpeed;
-    this.ball.rotation.z+=this.rotSpeed;
+    this.ball.rotation.x+=(this.rotSpeed * refreshRate);
+    this.ball.rotation.y+=(this.rotSpeed * refreshRate);
+    this.ball.rotation.z+=(this.rotSpeed * refreshRate);
   }
   protected static explode(scene:BABYLON.Scene, ball:BABYLON.Mesh, useCarrots:boolean): void
   {

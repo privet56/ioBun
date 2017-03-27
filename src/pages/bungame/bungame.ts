@@ -3,6 +3,7 @@ import { NavController,	LoadingController	}	from	'ionic-angular';
 import { Platform } from 'ionic-angular';
 import {Ball} from "./ball";
 import {Sun} from "./sun";
+import {BigBun} from "./bigbun";
 import {Rabbits} from "./rabbits";
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
@@ -13,7 +14,10 @@ import {Rabbits} from "./rabbits";
 })
 export class BunGamePage
 {
-  public static __isDemoTime:boolean = false; 
+  protected level:number = 0;
+  public static __isDemoTime:boolean = false;
+
+  public static __TEXTURE_GRASS = "assets/grass.png";
 
   @ViewChild('bungamecanvas') bunGameCanvasEleRef :	ElementRef;
   @ViewChild('ioncontent') ionContentEleRef :	ElementRef;
@@ -48,6 +52,7 @@ export class BunGamePage
       canvas.style.height = canvas.style.width = this.getCanvasSize();
       var engine:BABYLON.Engine = new BABYLON.Engine(canvas);
       var scene :BABYLON.Scene  = new BABYLON.Scene(engine);
+
       scene.clearColor = new BABYLON.Color4(0,0,0,0.0000000000000001);  //=set transparent background
 
       var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -10), scene);
@@ -72,7 +77,7 @@ export class BunGamePage
         ground.rotation.y = 0.05;
         ground.receiveShadows = true;
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
-        groundMaterial.diffuseTexture = new BABYLON.Texture("assets/grass.png", scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture(BunGamePage.__TEXTURE_GRASS, scene);
         groundMaterial.diffuseTexture.hasAlpha = true;  //=use transparent color
         ground.material = groundMaterial;
         ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
@@ -80,9 +85,10 @@ export class BunGamePage
       
       camera.setTarget(BABYLON.Vector3.Zero()); //target the camera to scene origin
 
-      let rabbits:Rabbits = new Rabbits(scene, BunGamePage.__isDemoTime ? 1 : 0);
-
-      this.onWon();
+      let bigBun:BigBun = new BigBun(scene);
+      let rabbits:Rabbits = new Rabbits(scene, BunGamePage.__isDemoTime ? 5 : 0, bigBun);
+      
+      this.onWon(bigBun);
 
       setTimeout(() =>
       {
@@ -90,13 +96,20 @@ export class BunGamePage
 
       }, 1999);
 
+      let lastRenderTime:number = (new Date()).getTime();
+      let optRenderTime = 15; 
+
       engine.runRenderLoop(() =>
       {
+        let newRenderTime:number = (new Date()).getTime();
+        let renderTimeDiff:number = newRenderTime - lastRenderTime; //eg renderTimeDiff:16 = 1490626997493 - 1490626997477
+        lastRenderTime = newRenderTime;
+
         if(!this.isActiveTab)return;
 
         scene.render();
 
-        let refreshRate:number = 1; //TODO: calc refreshRate based on 60 fps
+        let refreshRate:number = Math.round(renderTimeDiff / optRenderTime);
 
         { //cleanup
           this.balls.forEach((ball:Ball, index, object) =>
@@ -106,8 +119,7 @@ export class BunGamePage
               if(ball.isBallHit())
               {
                 let won : boolean = rabbits.createRabbit();
-                if( won)this.onWon();
-
+                if( won)this.onWon(bigBun);
               }
               object.splice(index, 1);
             }
@@ -117,6 +129,7 @@ export class BunGamePage
 
           sun.update(refreshRate);
           rabbits.update(refreshRate);
+          bigBun.update(refreshRate);
 
           this.balls.forEach((ball:Ball) =>
           {
@@ -131,6 +144,8 @@ export class BunGamePage
         }
         
       });
+
+      this.msg = "LEVEL: "+this.level;
     }
     catch(e)
     {
@@ -141,8 +156,15 @@ export class BunGamePage
     }
   }
 
-  protected onWon() : void
+  protected onWon(bigBun:BigBun) : void
   {
+      this.level++;
+
+      bigBun.onWon(() =>
+      {
+        this.isBallsAllowed = true;
+      });
+
       this.balls.forEach((ball:Ball) =>
       {
         if(ball.getMesh())
@@ -152,10 +174,8 @@ export class BunGamePage
       });
       this.balls = new Array<Ball>();
       this.isBallsAllowed = false;
-      setTimeout(() =>
-      {
-        this.isBallsAllowed = true;
-      }, 1999);
+
+      this.msg = "LEVEL: "+this.level;
   }
 
   protected makeBalls(add:number, scene:BABYLON.Scene,ground:BABYLON.Mesh, shadowGenerator:BABYLON.ShadowGenerator) : void
@@ -169,7 +189,7 @@ export class BunGamePage
         break;
       }
       let size:number = (Math.random() * 1.2) + 0.5;
-      let ball:Ball = new Ball(""+(new Date().getTime()), 16/*subdivs*/, size, scene, ground.physicsImpostor);
+      let ball:Ball = new Ball(""+(new Date().getTime()), 16/*subdivs*/, size, scene, ground.physicsImpostor, this.level);
       this.balls.push(ball);
       shadowGenerator.getShadowMap().renderList.push(ball.getMesh());
     }
@@ -223,5 +243,12 @@ export class BunGamePage
 
       //use pt instead of px, so are you resolution independent!!!
       return min+"pt";
+  }
+
+  public static preload() : void
+  {
+    //console.log("bungame preload");
+    //var assetsManager = new BABYLON.AssetsManager(scene);
+    //TODO: preload __TEXTURE_GRASS
   }
 }

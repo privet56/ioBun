@@ -1,6 +1,7 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
-import { SceneObject	} from	'./sceneobject';
+import { SceneObject } from	'./sceneobject';
+import { BigBun	} from	'./bigbun';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
@@ -9,9 +10,12 @@ export class Rabbits implements SceneObject
   protected rabbits:Array<BABYLON.AbstractMesh> = new Array<BABYLON.AbstractMesh>();
   protected rotSpeed:number = 0.09;
   public static __clapSound : BABYLON.Sound = null;
+  protected bigBun:BigBun = null;
 
-  constructor(public scene:BABYLON.Scene, createRabbits:number)
+  constructor(public scene:BABYLON.Scene, createRabbits:number, bigBun:BigBun)
   {
+      this.bigBun = bigBun;
+
       for(let i=0;i<createRabbits;i++)
       {
           this.createRabbit();
@@ -32,15 +36,13 @@ export class Rabbits implements SceneObject
   {
       for(let i=0;i<this.rabbits.length;i++)
       {
-          this.rabbits[i].rotation.y += 0.02;
-          //this.rabbits[i].rotate(new BABYLON.Vector3(0, 1, 0), 0.02, BABYLON.Space.WORLD);
-          //this.rabbits[i].rotate(BABYLON.Axis.Y, Math.PI / 64, BABYLON.Space.LOCAL);
+          this.rabbits[i].rotation.y += (0.02 * refreshRate);
 
           if(this.rabbits[i].scaling.x < 0.02)
           {
-              this.rabbits[i].scaling.x += 0.00005;
-              this.rabbits[i].scaling.y += 0.00005;
-              this.rabbits[i].scaling.z += 0.00005;
+              this.rabbits[i].scaling.x += (0.00005 * refreshRate);
+              this.rabbits[i].scaling.y += (0.00005 * refreshRate);
+              this.rabbits[i].scaling.z += (0.00005 * refreshRate);
           }
       }
   }
@@ -67,14 +69,9 @@ export class Rabbits implements SceneObject
     //actually Mesh.clone would be nicer...
     BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[], particleSystems:BABYLON.ParticleSystem[], skeletons:BABYLON.Skeleton[])
     {
-        {   //TODO: use skeletons[0]
-            //Rabbit.babylon has:
-            //2 console.log("#meshes:"+buns.length);
-            //0 console.log("#partSs:"+particleSystems.length);
-            //1 console.log("#Skelet:"+skeletons.length);
-        }
-
         let bun : BABYLON.AbstractMesh = buns[(self.rabbits.length % 2 == 0) ? 0 : buns.length - 1];
+
+        self.bigBun.setBun(bun, skeletons[0]);
 
         {
             let to:number       = 100 - (self.rabbits.length * 10);

@@ -36,16 +36,12 @@ export class Sun implements SceneObject
 
   public update(refreshRate:number) : void
   {
-    //this.sun.rotation.x += this.rotSpeed;
-    //this.sun.rotation.y += this.rotSpeed;
-    //this.sun.rotation.z += this.rotSpeed;
+    this.sun.rotate(    BABYLON.Axis.X,(this.rotSpeed * refreshRate), BABYLON.Space.LOCAL);
+    this.sun.translate( BABYLON.Axis.X,(this.rotSpeed*2.2)*refreshRate, BABYLON.Space.WORLD);
 
+    if( this.sun.position.x > 6.6)
     {
-        this.sun.rotate(BABYLON.Axis.X,this.rotSpeed, BABYLON.Space.LOCAL);
-        this.sun.translate(BABYLON.Axis.X,this.rotSpeed*2.2, BABYLON.Space.WORLD);
-
-        if( this.sun.position.x > 6.6)
-            this.sun.position.x = -7;
+        this.sun.position.x = -7;
     }
   }
 }

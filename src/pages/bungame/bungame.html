@@ -22,8 +22,11 @@
 </ul>
 
 <ion-list text-center #ionlist id="ionlist">
-  <ion-list-header class="contentheader" #ioncontentheader>Tap to destroy the spheres!</ion-list-header>
-  <ion-item *ngIf="msg">{{msg}}</ion-item>
+  <ion-list-header class="contentheader" #ioncontentheader style="font-weight:900%;">
+		Tap to destroy the spheres! &nbsp;&nbsp;
+		<span style="color:red;">{{msg}}</span>
+	</ion-list-header>
+  <!-- ion-item *ngIf="msg" style="font-weight:900%;color:red;">{{msg}}</ion-item -->
 </ion-list>
 
 <canvas id="bungamecanvas" #bungamecanvas style="text-align:center !important;"></canvas>
