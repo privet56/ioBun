@@ -1,6 +1,7 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
 import { SceneObject	} from	'./sceneobject';
+import { Defs	} from	'./defs';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
@@ -16,17 +17,27 @@ export class Sun implements SceneObject
 
     var light = new BABYLON.PointLight("Omni", new BABYLON.Vector3(1/*right*/, 5/*up*/, -1/*behind/before*/), scene);
     light.intensity = 0.7;
-
-    let material:BABYLON.StandardMaterial = new BABYLON.StandardMaterial("sun", scene);
-    material.diffuseTexture = new BABYLON.Texture("assets/sun.png", scene);
-    material.emissiveColor = new BABYLON.Color3(1, 1, 0);
-    material.diffuseColor = new BABYLON.Color3(1, 1, 1);
-    this.sun.material = material;
     this.sun.parent = light;
     this.sun.position.z += 6;  //put in background
     this.sun.position.y -= 3;
-
     this.sunLight = light;
+  }
+
+  preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void
+  {
+    var self = this;
+    {
+
+      let textureTask:BABYLON.ITextureAssetTask = assetsManager.addTextureTask(Defs.__DIR_ASSETS + Defs.__TEXTURE_SUN, Defs.__DIR_ASSETS + Defs.__TEXTURE_SUN);
+      textureTask.onSuccess = function(task)
+      {
+        let material:BABYLON.StandardMaterial = new BABYLON.StandardMaterial("sun", scene);
+        material.diffuseTexture = task.texture;
+        material.emissiveColor  = new BABYLON.Color3(1, 1, 0);
+        material.diffuseColor   = new BABYLON.Color3(1, 1, 1);
+        self.sun.material = material;
+      };
+    }
   }
 
   public getLight() : BABYLON.IShadowLight

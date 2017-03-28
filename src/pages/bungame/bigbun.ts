@@ -1,5 +1,6 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
+import { Defs	} from	'./defs';
 import { SceneObject	} from	'./sceneobject';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
@@ -13,12 +14,28 @@ export class BigBun implements SceneObject
   
   constructor(public scene:BABYLON.Scene)
   {
-    var self = this;
-    BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[], particleSystems:BABYLON.ParticleSystem[], skeletons:BABYLON.Skeleton[])
-    {
-        self.initBun(buns[0], skeletons[0]);
-    });
+
   }
+
+  preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void
+  {
+    var self = this;
+    {
+      var meshTask = assetsManager.addMeshTask(""/*taskName*/, ""/*meshesNames*/, Defs.__DIR_ASSETS/*rootUrl*/, Defs.__BABYLON_RABBIT/*sceneFileName*/);
+      meshTask.onSuccess = function (task:BABYLON.MeshAssetTask)
+      {
+        self.initBun(task.loadedMeshes[0], task.loadedSkeletons[0]);
+      }
+    }
+    /*{ //test loading big file
+      var meshTask = assetsManager.addMeshTask("", "", Defs.__DIR_ASSETS, "lea.obj");
+      meshTask.onSuccess = function (task:BABYLON.MeshAssetTask)
+      {
+        //nothing to do...
+      }
+    }*/
+  }
+
   public update(refreshRate:number):void
   {
       if(!this.bun)return;

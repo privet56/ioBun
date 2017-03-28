@@ -1,6 +1,7 @@
 import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
 import { SceneObject	} from	'./sceneobject';
+import { Defs	} from	'./defs';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
@@ -21,17 +22,31 @@ export class Ball implements SceneObject
       this.ball = BABYLON.Mesh.CreateSphere(name, subdivs, size, scene);
 
       { //INIT
-        if(!Ball.__woodTexture)   Ball.__woodTexture  = new BABYLON.Texture("assets/wood.png" , scene);
-        if(!Ball.__grassTexture)  Ball.__grassTexture = new BABYLON.Texture("assets/lea.png"  , scene);
-        if(!Ball.__collSound)     Ball.__collSound    = new BABYLON.Sound("Music", "assets/sound/HitsAccept2.wav", scene, null,
-          { loop: false, autoplay: false, volume:0.05 }
-        );
-        if(!Ball.__hitSound)     Ball.__hitSound    = new BABYLON.Sound("Music", "assets/sound/Power_Pick_Up_06.wav", scene, null,
-          { loop: false, autoplay: false, volume:0.55 }
-        );
+        if(!Ball.__woodTexture)
+        {
+           console.warn("Ball.__woodTexture should have been preloaded");
+           Ball.__woodTexture  = new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_WOOD , scene);
+        }
+        if(!Ball.__grassTexture)
+        {
+            console.warn("Ball.__grassTexture should have been preloaded");
+            Ball.__grassTexture = new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_LEA  , scene);
+        }
+        if(!Ball.__collSound)
+        {
+          console.warn("Ball.__collSound should have been preloaded");
+             Ball.__collSound    = new BABYLON.Sound("Music1", Defs.__DIR_ASSETS + Defs.__SOUND_COLLISION,
+                                                      scene, null,  { loop: false, autoplay: false, volume:0.05 });
+        }
+        if(!Ball.__hitSound)
+        {
+          console.warn("Ball.__hitSound should have been preloaded");
+             Ball.__hitSound    = new BABYLON.Sound("Music", Defs.__DIR_ASSETS + Defs.__SOUND_HIT,
+                                                      scene, null, { loop: false, autoplay: false, volume:0.55 });
+        }
       }
 
-      var materialSphere = (Math.random() > 0.5) ? new BABYLON.StandardMaterial("assets/grass.png", scene) : new BABYLON.StandardMaterial("assets/wood.png", scene);
+      var materialSphere = (Math.random() > 0.5) ? new BABYLON.StandardMaterial(Defs.__DIR_ASSETS + Defs.__TEXTURE_GRASS, scene) : new BABYLON.StandardMaterial(Defs.__DIR_ASSETS + Defs.__TEXTURE_WOOD, scene);
       this.ball.material = materialSphere;
       materialSphere.diffuseTexture = (Math.random() > 0.5) ? Ball.__woodTexture : Ball.__grassTexture;
 
@@ -77,6 +92,49 @@ export class Ball implements SceneObject
       {
         self.onClick();
       }));
+  }
+
+  preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void
+  {
+    //nothing to do here, because done in static_preload 
+  }
+
+  static static_preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void
+  {
+    {
+      let textureTask:BABYLON.ITextureAssetTask = assetsManager.addTextureTask(Defs.__DIR_ASSETS + Defs.__TEXTURE_WOOD, Defs.__DIR_ASSETS + Defs.__TEXTURE_WOOD);
+      textureTask.onSuccess = function(task)
+      {
+        Ball.__woodTexture = task.texture;
+      };
+    }
+    {
+      let textureTask:BABYLON.ITextureAssetTask = assetsManager.addTextureTask(Defs.__DIR_ASSETS + Defs.__TEXTURE_LEA, Defs.__DIR_ASSETS + Defs.__TEXTURE_LEA);
+      textureTask.onSuccess = function(task)
+      {
+        Ball.__grassTexture = task.texture;
+      };
+    }
+    {
+      let fileTask:BABYLON.IAssetTask = assetsManager.addBinaryFileTask(Defs.__DIR_ASSETS + Defs.__SOUND_COLLISION, Defs.__DIR_ASSETS + Defs.__SOUND_COLLISION);
+      fileTask.onSuccess = function(task:BABYLON.BinaryFileAssetTask)
+      {
+        let data = task.data;
+        if(!data)console.error("!data on "+Defs.__DIR_ASSETS + Defs.__SOUND_COLLISION);
+        Ball.__collSound = new BABYLON.Sound( Defs.__DIR_ASSETS + Defs.__SOUND_COLLISION,
+                                              data, scene, null/*readyToPlayCallback*/, { loop: false, autoplay: false, volume:0.05 });
+      };
+    }
+    {
+      let fileTask:BABYLON.IAssetTask = assetsManager.addBinaryFileTask(Defs.__DIR_ASSETS + Defs.__SOUND_HIT, Defs.__DIR_ASSETS + Defs.__SOUND_HIT);
+      fileTask.onSuccess = function(task:BABYLON.BinaryFileAssetTask)
+      {
+        let data = task.data;
+        if(!data)console.error("!data on "+Defs.__DIR_ASSETS + Defs.__SOUND_HIT);
+        Ball.__hitSound = new BABYLON.Sound( Defs.__DIR_ASSETS + Defs.__SOUND_HIT,
+                                              data, scene, null/*readyToPlayCallback*/, { loop: false, autoplay: false, volume:0.55 });
+      };
+    }
   }
 
   public getMesh() : BABYLON.Mesh
@@ -135,7 +193,7 @@ export class Ball implements SceneObject
 
     var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
 
-    particleSystem.particleTexture = useCarrots ?  new BABYLON.Texture("assets/carrot.png", scene) : new BABYLON.Texture("assets/lensflare/lensflare0_alpha.png", scene);
+    particleSystem.particleTexture = useCarrots ?  new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_CARROT, scene) : new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_LENSFLAREALPHA, scene);
     particleSystem.emitter = fountain;
     particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
     particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0);

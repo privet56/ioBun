@@ -2,6 +2,7 @@ import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
 import { Platform } from 'ionic-angular';
 import {Ball} from "./ball";
+import {Defs} from "./defs";
 import {Sun} from "./sun";
 import {BigBun} from "./bigbun";
 import {Rabbits} from "./rabbits";
@@ -17,7 +18,7 @@ export class BunGamePage
   protected level:number = 0;
   public static __isDemoTime:boolean = false;
 
-  public static __TEXTURE_GRASS = "assets/grass.png";
+  
 
   @ViewChild('bungamecanvas') bunGameCanvasEleRef :	ElementRef;
   @ViewChild('ioncontent') ionContentEleRef :	ElementRef;
@@ -52,6 +53,15 @@ export class BunGamePage
       canvas.style.height = canvas.style.width = this.getCanvasSize();
       var engine:BABYLON.Engine = new BABYLON.Engine(canvas);
       var scene :BABYLON.Scene  = new BABYLON.Scene(engine);
+      let assetsManager:BABYLON.AssetsManager = new BABYLON.AssetsManager(scene);
+      {
+        assetsManager.useDefaultLoadingScreen = true;
+        BABYLON.SceneLoader.ShowLoadingScreen = true;
+        engine.displayLoadingUI();
+        engine.hideLoadingUI();
+        engine.loadingUIText = "loading...";
+        engine.loadingUIBackgroundColor = "green";
+      }
 
       scene.clearColor = new BABYLON.Color4(0,0,0,0.0000000000000001);  //=set transparent background
 
@@ -77,7 +87,7 @@ export class BunGamePage
         ground.rotation.y = 0.05;
         ground.receiveShadows = true;
         var groundMaterial = new BABYLON.StandardMaterial("ground", scene);
-        groundMaterial.diffuseTexture = new BABYLON.Texture(BunGamePage.__TEXTURE_GRASS, scene);
+        groundMaterial.diffuseTexture = new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_GRASS, scene);
         groundMaterial.diffuseTexture.hasAlpha = true;  //=use transparent color
         ground.material = groundMaterial;
         ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, restitution: 0.9 }, scene);
@@ -87,64 +97,81 @@ export class BunGamePage
 
       let bigBun:BigBun = new BigBun(scene);
       let rabbits:Rabbits = new Rabbits(scene, BunGamePage.__isDemoTime ? 5 : 0, bigBun);
-      
-      this.onWon(bigBun);
-
-      setTimeout(() =>
-      {
-        this.isBallsAllowed = true;
-
-      }, 1999);
 
       let lastRenderTime:number = (new Date()).getTime();
-      let optRenderTime = 15; 
-
-      engine.runRenderLoop(() =>
+      let optRenderTime = 15;
+      let self = this;
+      let assetsManagerLoadStart:number = 0;
+      assetsManager.onFinish = function(tasks)
       {
-        let newRenderTime:number = (new Date()).getTime();
-        let renderTimeDiff:number = newRenderTime - lastRenderTime; //eg renderTimeDiff:16 = 1490626997493 - 1490626997477
-        lastRenderTime = newRenderTime;
+        {
+          let assetsManagerLoadEnd:number = (new Date()).getTime();
+          console.log("PRELOAD done in "+(assetsManagerLoadEnd - assetsManagerLoadStart)+" ms");  //local: ~100ms
+        }
+        { //do it once preload finished
+          self.onWon(null);
 
-        if(!this.isActiveTab)return;
-
-        scene.render();
-
-        let refreshRate:number = Math.round(renderTimeDiff / optRenderTime);
-
-        { //cleanup
-          this.balls.forEach((ball:Ball, index, object) =>
+          setTimeout(() =>
           {
-            if(ball.isDisposed())
+            self.isBallsAllowed = true;
+
+          }, 1999);
+        }
+
+        engine.runRenderLoop(() =>
+        {
+          let newRenderTime:number = (new Date()).getTime();
+          let renderTimeDiff:number = newRenderTime - lastRenderTime; //eg renderTimeDiff:16 = 1490626997493 - 1490626997477
+          lastRenderTime = newRenderTime;
+
+          if(!self.isActiveTab)return;
+
+          scene.render();
+
+          let refreshRate:number = Math.round(renderTimeDiff / optRenderTime);
+
+          { //cleanup
+            self.balls.forEach((ball:Ball, index, object) =>
             {
-              if(ball.isBallHit())
+              if(ball.isDisposed())
               {
-                let won : boolean = rabbits.createRabbit();
-                if( won)this.onWon(bigBun);
+                if(ball.isBallHit())
+                {
+                  let won : boolean = rabbits.createRabbit();
+                  if( won)self.onWon(bigBun);
+                }
+                object.splice(index, 1);
               }
-              object.splice(index, 1);
-            }
-          });
-        }
-        { //update
-
-          sun.update(refreshRate);
-          rabbits.update(refreshRate);
-          bigBun.update(refreshRate);
-
-          this.balls.forEach((ball:Ball) =>
-          {
-              ball.update(refreshRate);
-          });
-        }
-        { //fill again
-          if(this.balls.length < 3)
-          {
-            this.makeBalls(5, scene, ground, shadowGenerator);
+            });
           }
-        }
-        
-      });
+          { //update
 
+            sun.update(refreshRate);
+            rabbits.update(refreshRate);
+            bigBun.update(refreshRate);
+
+            self.balls.forEach((ball:Ball) =>
+            {
+                ball.update(refreshRate);
+            });
+          }
+          { //fill again
+            if(self.balls.length < 3)
+            {
+              self.makeBalls(5, scene, ground, shadowGenerator);
+            }
+          }
+        });
+      };
+
+      { //preload
+        bigBun.preload(assetsManager, scene);
+        rabbits.preload(assetsManager, scene);
+        sun.preload(assetsManager, scene);
+        Ball.static_preload(assetsManager, scene);
+        assetsManager.load();
+        assetsManagerLoadStart = (new Date()).getTime();
+      }
       this.msg = "LEVEL: "+this.level;
     }
     catch(e)
@@ -159,11 +186,13 @@ export class BunGamePage
   protected onWon(bigBun:BigBun) : void
   {
       this.level++;
-
-      bigBun.onWon(() =>
+      if(bigBun)
       {
-        this.isBallsAllowed = true;
-      });
+        bigBun.onWon(() =>
+        {
+          this.isBallsAllowed = true;
+        });
+      }
 
       this.balls.forEach((ball:Ball) =>
       {

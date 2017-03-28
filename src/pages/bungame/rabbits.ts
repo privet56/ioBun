@@ -2,6 +2,7 @@ import { ElementRef, ViewChild, Component } from '@angular/core';
 import { NavController,	LoadingController	}	from	'ionic-angular';
 import { SceneObject } from	'./sceneobject';
 import { BigBun	} from	'./bigbun';
+import { Defs	} from	'./defs';
 
 /// <reference path="assets/babylonjs/babylon.2.5.d.ts" />
 
@@ -21,15 +22,32 @@ export class Rabbits implements SceneObject
           this.createRabbit();
       }
 
-      if(!Rabbits.__clapSound)Rabbits.__clapSound    = new BABYLON.Sound("Music", "assets/sound/clap.mp3", scene, null,
-        { loop: false, autoplay: false, volume:0.55 }
-      );
+      if(!Rabbits.__clapSound)
+      {
+        console.warn("Rabbits.__clapSound not preloaded "+Defs.__DIR_ASSETS + Defs.__SOUND_CLAP);
+        Rabbits.__clapSound    = new BABYLON.Sound("Music", Defs.__DIR_ASSETS + Defs.__SOUND_CLAP,
+                                                        scene, null, { loop: false, autoplay: false, volume:0.55 });
+      }
 
       setTimeout(() =>
       {
           this.firework();
 
       }, 999);
+  }
+
+  preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void
+  {
+    {
+      let fileTask:BABYLON.IAssetTask = assetsManager.addBinaryFileTask(Defs.__DIR_ASSETS + Defs.__SOUND_CLAP, Defs.__DIR_ASSETS + Defs.__SOUND_CLAP);
+      fileTask.onSuccess = function(task:BABYLON.BinaryFileAssetTask)
+      {
+        let data = task.data;
+        if(!data)console.error("!data on "+Defs.__DIR_ASSETS + Defs.__SOUND_CLAP);
+        Rabbits.__clapSound = new BABYLON.Sound( Defs.__DIR_ASSETS + Defs.__SOUND_CLAP,
+                                              data, scene, null/*readyToPlayCallback*/, { loop: false, autoplay: false, volume:0.55 });
+      };
+    }
   }
 
   public update(refreshRate:number) : void
@@ -66,8 +84,8 @@ export class Rabbits implements SceneObject
 
     var self = this;
 
-    //actually Mesh.clone would be nicer...
-    BABYLON.SceneLoader.ImportMesh("","assets/", "Rabbit.babylon", this.scene, function (buns:BABYLON.AbstractMesh[], particleSystems:BABYLON.ParticleSystem[], skeletons:BABYLON.Skeleton[])
+    //actually & preload + Mesh.clone would be nicer...
+    BABYLON.SceneLoader.ImportMesh("",Defs.__DIR_ASSETS, Defs.__BABYLON_RABBIT, this.scene, function (buns:BABYLON.AbstractMesh[], particleSystems:BABYLON.ParticleSystem[], skeletons:BABYLON.Skeleton[])
     {
         let bun : BABYLON.AbstractMesh = buns[(self.rabbits.length % 2 == 0) ? 0 : buns.length - 1];
 
@@ -149,7 +167,7 @@ export class Rabbits implements SceneObject
 
     var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
 
-    particleSystem.particleTexture = new BABYLON.Texture("assets/lensflare/lensflare0.png", scene);
+    particleSystem.particleTexture = new BABYLON.Texture(Defs.__DIR_ASSETS + Defs.__TEXTURE_LENSFLARE0, scene);
     particleSystem.emitter = fountain;
     particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
     particleSystem.maxEmitBox = new BABYLON.Vector3(0, 0, 0);

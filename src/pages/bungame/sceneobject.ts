@@ -5,5 +5,6 @@ import { NavController,	LoadingController	}	from	'ionic-angular';
 
 export interface SceneObject
 {
-    update(refreshRate:number);
+    preload(assetsManager:BABYLON.AssetsManager, scene:BABYLON.Scene) : void;
+    update(refreshRate:number) : void;
 }
