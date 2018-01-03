@@ -51,6 +51,7 @@
 
 5) white screen death:
 	1. ionic plugin add cordova-plugin-crosswalk-webview
+		(but note: Crosswalk: "we have decided to discontinue support for Android 4.0")
 	2. cordova platform update android
 	AND
 	install "Android Support Repository" (https://crosswalk-project.org/jira/si/jira.issueviews:issue-html/XWALK-5965/XWALK-5965.html)
